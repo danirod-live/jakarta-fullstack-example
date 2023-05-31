@@ -1,0 +1,24 @@
+---
+
+services:
+  mysql:
+    image: mysql:8
+    ports:
+      - 3306:3306
+    volumes:
+      - ./data.sql:/docker-entrypoint-initdb.d/dump.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: escuela
+      MYSQL_DATABASE: escuela
+    command: ['--wait-timeout=1500000']
+  java:
+    image: javita
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql
+    restart: on-failure
+networks:
+  db:
+    internal: true
